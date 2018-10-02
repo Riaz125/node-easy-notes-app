@@ -118,14 +118,16 @@ exports.delete = (req, res) => {
 var moment = require('moment');
 
 exports.findDate = (req, res) => {
-
-  var today = moment().startOf('day');
-  var tomorrow = moment(today).endOf('day');
+  const startDate = moment(req.params.date);
+  const endDate = moment(req.params.date).add(1, 'days');
+  console.log("start " + startDate.toDate());
+  console.log("req date " + req.params.date);
+  console.log("end " + endDate.toDate());
 
   Note.find({
     createdAt: {
-      $gte: today.toDate(),
-      $lt: tomorrow.toDate()
+      $gte: startDate.toDate(),
+      $lt: endDate.toDate()
     }
   }).then(notes => {
       res.send(notes);
