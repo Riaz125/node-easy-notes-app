@@ -11,7 +11,7 @@ exports.create = (req, res) => {
 
     // Create a Note
     const note = new Note({
-        title: req.body.title || "Untitled Note", 
+        title: req.body.title || "Untitled Note",
         content: req.body.content
     });
 
@@ -45,14 +45,14 @@ exports.findOne = (req, res) => {
         if(!note) {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
-            });            
+            });
         }
         res.send(note);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
-            });                
+            });
         }
         return res.status(500).send({
             message: "Error retrieving note with id " + req.params.noteId
@@ -85,7 +85,7 @@ exports.update = (req, res) => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
-            });                
+            });
         }
         return res.status(500).send({
             message: "Error updating note with id " + req.params.noteId
@@ -107,10 +107,46 @@ exports.delete = (req, res) => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
                 message: "Note not found with id " + req.params.noteId
-            });                
+            });
         }
         return res.status(500).send({
             message: "Could not delete note with id " + req.params.noteId
         });
     });
+};
+
+var moment = require('moment');
+
+exports.findDate = (req, res) => {
+
+  var today = moment().startOf('day');
+  var tomorrow = moment(today).endOf('day');
+
+  Note.find({
+    createdAt: {
+      $gte: today.toDate(),
+      $lt: tomorrow.toDate()
+    }
+  }).then(notes => {
+      res.send(notes);
+  });
+/*
+    const startDate = req.params.startDate;
+    const endDate = startDate + 10 minute; // idk
+
+    Note.find({
+        createdAt: {
+            $gt:  startDate,
+            $lt:  endDate
+        }
+    }, function(err, positions) {
+        if (err) {
+            return err
+        }
+        else {
+            //console.log(positions);
+            res.json(positions);
+        }
+    });
+*/
 };
