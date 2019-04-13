@@ -10,7 +10,8 @@ module.exports = (app) => {
     // Retrieve a single Note with noteId
     app.get('/notes/:noteId', notes.findOne);
 
-    // app.get('/notes/date/:datestr', notes.findDate);
+    // Retreive document by date
+    app.get('/notes/date/:date', notes.findDate)
 
     // Update a Note with noteId
     app.put('/notes/:noteId', notes.update);
